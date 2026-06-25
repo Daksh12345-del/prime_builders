@@ -66,15 +66,30 @@ const NAV_ITEMS = [
   { href: '/contact.html', label: 'Contact' }
 ];
 
+const LOCALITIES = [
+  { href: '/janakpuri.html', label: 'Janakpuri' },
+  { href: '/rajouri-garden.html', label: 'Rajouri Garden' },
+  { href: '/tilak-nagar.html', label: 'Tilak Nagar' },
+  { href: '/vikaspuri.html', label: 'Vikaspuri' },
+  { href: '/paschim-vihar.html', label: 'Paschim Vihar' },
+  { href: '/uttam-nagar.html', label: 'Uttam Nagar' }
+];
+
 function renderHeader(activePath) {
   const slot = document.getElementById('site-header-slot');
   if (!slot) return;
+
+  const isLocalityActive = LOCALITIES.some(l => l.href === activePath);
 
   const links = NAV_ITEMS.map(item => {
     const isActive = item.href === activePath ||
       (activePath === '/index.html' && item.href === '/');
     return `<a href="${item.href}" class="${isActive ? 'active' : ''}">${item.label}</a>`;
   }).join('');
+
+  const localityLinks = LOCALITIES.map(l =>
+    `<a href="${l.href}" class="dropdown-item${l.href === activePath ? ' active' : ''}">${l.label}</a>`
+  ).join('');
 
   slot.innerHTML = `
     <header class="site-header">
@@ -89,7 +104,19 @@ function renderHeader(activePath) {
           <span></span>
         </button>
         <nav class="nav-links" id="nav-links">
-          ${links}
+          <a href="/" class="${activePath === '/' || activePath === '/index.html' ? 'active' : ''}">Home</a>
+          <a href="/properties.html" class="${activePath === '/properties.html' ? 'active' : ''}">Properties</a>
+          <div class="nav-dropdown${isLocalityActive ? ' active' : ''}">
+            <button class="nav-dropdown-toggle" aria-haspopup="true" aria-expanded="false">
+              Localities <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 4l4 4 4-4"/></svg>
+            </button>
+            <div class="nav-dropdown-menu">
+              ${localityLinks}
+            </div>
+          </div>
+          <a href="/gallery.html" class="${activePath === '/gallery.html' ? 'active' : ''}">Gallery</a>
+          <a href="/blog.html" class="${activePath === '/blog.html' ? 'active' : ''}">Blog</a>
+          <a href="/contact.html" class="${activePath === '/contact.html' ? 'active' : ''}">Contact</a>
           <a href="/contact.html" class="nav-cta">Enquire Now</a>
         </nav>
       </div>
@@ -104,6 +131,22 @@ function renderHeader(activePath) {
     toggle.setAttribute('aria-expanded', String(isOpen));
     document.body.style.overflow = isOpen ? 'hidden' : '';
   });
+
+  // Localities dropdown toggle
+  const dropdownToggle = slot.querySelector('.nav-dropdown-toggle');
+  const dropdown = slot.querySelector('.nav-dropdown');
+  if (dropdownToggle && dropdown) {
+    dropdownToggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isOpen = dropdown.classList.toggle('open');
+      dropdownToggle.setAttribute('aria-expanded', String(isOpen));
+    });
+    // Close dropdown when clicking outside
+    document.addEventListener('click', () => {
+      dropdown.classList.remove('open');
+      dropdownToggle.setAttribute('aria-expanded', 'false');
+    });
+  }
 
   // Close menu when a nav link is clicked
   navLinks.querySelectorAll('a').forEach(link => {
