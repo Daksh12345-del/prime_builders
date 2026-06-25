@@ -152,6 +152,15 @@ async function renderFooter() {
             <a href="/contact.html">Contact</a>
           </div>
           <div>
+            <h4>Localities</h4>
+            <a href="/janakpuri.html">Janakpuri</a>
+            <a href="/rajouri-garden.html">Rajouri Garden</a>
+            <a href="/tilak-nagar.html">Tilak Nagar</a>
+            <a href="/vikaspuri.html">Vikaspuri</a>
+            <a href="/paschim-vihar.html">Paschim Vihar</a>
+            <a href="/uttam-nagar.html">Uttam Nagar</a>
+          </div>
+          <div>
             <h4>Contact</h4>
             <p>${settings.office_address || 'West Delhi, New Delhi'}</p>
             <p class="sub">${settings.office_hours || 'Mon - Sat: 10:00 AM - 7:00 PM'}</p>
@@ -176,8 +185,15 @@ async function renderFooter() {
 
 function formatPhone(fullNumber) {
   if (!fullNumber) return '';
-  const digits = fullNumber.replace(/^91/, '');
-  return digits.replace(/(\d{5})(\d{5})/, '$1 $2');
+  // Strip leading +, spaces, dashes, then strip country code 91
+  let digits = String(fullNumber).replace(/[\s\-\+]/g, '');
+  if (digits.startsWith('91') && digits.length > 10) {
+    digits = digits.slice(2);
+  }
+  // Format as XXXXX XXXXX
+  const m = digits.match(/^(\d{5})(\d{5})$/);
+  if (m) return m[1] + ' ' + m[2];
+  return digits; // fallback: return as-is
 }
 
 async function renderWhatsAppFloat() {
