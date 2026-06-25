@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel — Prime Builder</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32.png">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/tokens.css">
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body>
+
+  <!-- LOGIN SCREEN -->
+  <div id="login-screen" class="admin-login-screen">
+    <div class="admin-login-card">
+      <img src="/images/logo-navbar.png" alt="Prime Builder" width="56" height="56" style="border-radius:50%;margin-bottom:16px;">
+      <h1>Admin Panel</h1>
+      <p class="sub">Prime Builder — internal use only</p>
+      <form id="login-form">
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input type="text" id="username" required autocomplete="username">
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" required autocomplete="current-password">
+        </div>
+        <div id="login-error" class="login-error hidden"></div>
+        <button type="submit" class="btn btn-gold btn-block" id="login-btn">Log In</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ADMIN DASHBOARD (hidden until logged in) -->
+  <div id="admin-app" class="hidden">
+    <div class="admin-shell">
+      <!-- Sidebar -->
+      <aside class="admin-sidebar">
+        <div class="admin-brand">
+          <img src="/images/logo-navbar.png" alt="Prime Builder" width="36" height="36">
+          <span>Prime Builder<br><small>Admin</small></span>
+        </div>
+        <nav class="admin-nav">
+          <button data-view="dashboard" class="admin-nav-link active">Dashboard</button>
+          <button data-view="properties" class="admin-nav-link">Properties</button>
+          <button data-view="gallery" class="admin-nav-link">Gallery</button>
+          <button data-view="homepage-videos" class="admin-nav-link">Homepage Videos</button>
+          <button data-view="inquiries" class="admin-nav-link">Inquiries</button>
+          <button data-view="testimonials" class="admin-nav-link">Testimonials</button>
+          <button data-view="blog" class="admin-nav-link">Blog</button>
+          <button data-view="settings" class="admin-nav-link">Settings</button>
+        </nav>
+        <div class="admin-sidebar-footer">
+          <a href="/" target="_blank" class="btn btn-outline btn-sm btn-block" style="margin-bottom:10px;">View Live Site &rarr;</a>
+          <button id="logout-btn" class="btn btn-sm btn-block" style="color:var(--color-grey);border:1px solid var(--color-line);">Log Out</button>
+        </div>
+      </aside>
+
+      <!-- Main content -->
+      <main class="admin-main">
+
+        <!-- DASHBOARD VIEW -->
+        <section id="view-dashboard" class="admin-view">
+          <h2>Dashboard</h2>
+          <div class="admin-stats-grid">
+            <div class="admin-stat-card">
+              <div class="admin-stat-num" id="stat-total-properties">--</div>
+              <div class="admin-stat-label">Total Properties</div>
+            </div>
+            <div class="admin-stat-card">
+              <div class="admin-stat-num" id="stat-available">--</div>
+              <div class="admin-stat-label">Available</div>
+            </div>
+            <div class="admin-stat-card">
+              <div class="admin-stat-num" id="stat-sold">--</div>
+              <div class="admin-stat-label">Sold</div>
+            </div>
+            <div class="admin-stat-card">
+              <div class="admin-stat-num" id="stat-new-inquiries">--</div>
+              <div class="admin-stat-label">New Inquiries</div>
+            </div>
+          </div>
+
+          <h3 style="margin-top:32px;">Recent Inquiries</h3>
+          <div id="dashboard-recent-inquiries" class="admin-table-wrap"></div>
+        </section>
+
+        <!-- PROPERTIES VIEW -->
+        <section id="view-properties" class="admin-view hidden">
+          <div class="admin-view-header">
+            <h2>Properties</h2>
+            <button class="btn btn-gold" id="add-property-btn">+ Add Property</button>
+          </div>
+          <div id="admin-properties-list" class="admin-table-wrap"></div>
+        </section>
+
+        <!-- GALLERY VIEW -->
+        <section id="view-gallery" class="admin-view hidden">
+          <div class="admin-view-header">
+            <h2>Gallery</h2>
+          </div>
+
+          <div class="admin-card" style="margin-bottom:24px;">
+            <h4>Upload Photo or Video</h4>
+            <p class="admin-help-text">Pick a photo or short video from your computer or phone. It appears on the live Gallery page immediately after upload.</p>
+            <form id="gallery-upload-form">
+              <div class="form-group">
+                <label for="gallery-file">Choose File</label>
+                <input type="file" id="gallery-file" accept="image/*,video/mp4,video/webm,video/quicktime" required>
+              </div>
+              <div class="form-group">
+                <label for="gallery-caption">Caption (optional)</label>
+                <input type="text" id="gallery-caption" placeholder="e.g. Site visit at Janakpuri project">
+              </div>
+              <button type="submit" class="btn btn-gold">Upload</button>
+            </form>
+          </div>
+
+          <div class="admin-card" style="margin-bottom:24px;">
+            <h4>Or Add a YouTube Video</h4>
+            <p class="admin-help-text">If your video is already on YouTube, paste the video ID instead of uploading the file again. Find it in the YouTube URL after "v=" or after "youtu.be/".</p>
+            <form id="youtube-add-form">
+              <div class="form-group">
+                <label for="youtube-id">YouTube Video ID</label>
+                <input type="text" id="youtube-id" placeholder="e.g. dQw4w9WgXcQ" required>
+              </div>
+              <div class="form-group">
+                <label for="youtube-caption">Caption (optional)</label>
+                <input type="text" id="youtube-caption" placeholder="e.g. Walkthrough of our Rajouri Garden project">
+              </div>
+              <button type="submit" class="btn btn-outline">Add YouTube Video</button>
+            </form>
+          </div>
+
+          <h4 style="margin-bottom:16px;">Current Gallery Items</h4>
+          <div id="admin-gallery-grid" class="admin-gallery-grid"></div>
+        </section>
+
+        <!-- HOMEPAGE VIDEOS VIEW -->
+        <section id="view-homepage-videos" class="admin-view hidden">
+          <div class="admin-view-header">
+            <h2>Homepage Videos</h2>
+          </div>
+
+          <div class="admin-card" style="margin-bottom:24px;">
+            <h4>Add a Video to the Homepage Row</h4>
+            <p class="admin-help-text">These appear as a floating, auto-scrolling row near the bottom of the homepage. Each plays silently on a loop until someone clicks "View" to watch with sound. Up to 7 videos at a time — delete an old one to make room for a new one.</p>
+            <form id="homepage-video-form">
+              <div class="form-group">
+                <label for="hv-video">Video File *</label>
+                <input type="file" id="hv-video" accept="video/mp4,video/webm,video/quicktime" required>
+              </div>
+              <div class="form-group">
+                <label for="hv-cover">Cover Image (optional)</label>
+                <input type="file" id="hv-cover" accept="image/*">
+                <p class="admin-help-text" style="margin-top:6px;margin-bottom:0;">Shown for an instant while the video loads. If skipped, the video's own first frame is used.</p>
+              </div>
+              <div class="form-group">
+                <label for="hv-title">Title / Caption (optional)</label>
+                <input type="text" id="hv-title" placeholder="e.g. Walkthrough — Janakpuri 3BHK">
+              </div>
+              <button type="submit" class="btn btn-gold" id="hv-submit-btn">Upload Video</button>
+            </form>
+          </div>
+
+          <h4 style="margin-bottom:16px;">Current Homepage Videos (<span id="hv-count">0</span>/7)</h4>
+          <div id="admin-homepage-videos-grid" class="admin-gallery-grid"></div>
+        </section>
+
+        <!-- INQUIRIES VIEW -->
+        <section id="view-inquiries" class="admin-view hidden">
+          <h2>Inquiries</h2>
+          <div id="admin-inquiries-list" class="admin-table-wrap"></div>
+        </section>
+
+        <!-- TESTIMONIALS VIEW -->
+        <section id="view-testimonials" class="admin-view hidden">
+          <div class="admin-view-header">
+            <h2>Testimonials</h2>
+          </div>
+          <div class="admin-card" style="margin-bottom:24px;">
+            <h4>Add Testimonial</h4>
+            <form id="testimonial-form">
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="t-name">Client Name</label>
+                  <input type="text" id="t-name" required>
+                </div>
+                <div class="form-group">
+                  <label for="t-locality">Locality</label>
+                  <input type="text" id="t-locality" placeholder="e.g. Janakpuri">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="t-quote">Quote</label>
+                <textarea id="t-quote" required placeholder="What did the client say about working with you?"></textarea>
+              </div>
+              <div class="form-group">
+                <label for="t-rating">Rating</label>
+                <select id="t-rating">
+                  <option value="5">5 stars</option>
+                  <option value="4">4 stars</option>
+                  <option value="3">3 stars</option>
+                </select>
+              </div>
+              <button type="submit" class="btn btn-gold">Add Testimonial</button>
+            </form>
+          </div>
+          <div id="admin-testimonials-list" class="admin-table-wrap"></div>
+        </section>
+
+        <!-- BLOG VIEW -->
+        <section id="view-blog" class="admin-view hidden">
+          <div class="admin-view-header">
+            <h2>Blog</h2>
+          </div>
+          <div class="admin-card" style="margin-bottom:24px;">
+            <h4 id="blog-form-heading">Add Post</h4>
+            <form id="blog-form">
+              <input type="hidden" id="b-id" value="">
+              <div class="form-group">
+                <label for="b-title">Title</label>
+                <input type="text" id="b-title" required placeholder="e.g. A First-Time Buyer's Guide to West Delhi">
+              </div>
+              <div class="form-group">
+                <label for="b-excerpt">Excerpt (shown on the blog listing page)</label>
+                <textarea id="b-excerpt" placeholder="One or two sentences summarizing the post"></textarea>
+              </div>
+              <div class="form-group">
+                <label for="b-cover-url">Cover Image URL (optional)</label>
+                <input type="text" id="b-cover-url" placeholder="https://...">
+              </div>
+              <div class="form-group">
+                <label for="b-body">Post Content (HTML allowed — use &lt;h3&gt; and &lt;p&gt; tags)</label>
+                <textarea id="b-body" required rows="10" placeholder="&lt;p&gt;Your post content goes here...&lt;/p&gt;"></textarea>
+              </div>
+              <div class="form-group" style="display:flex;align-items:center;gap:8px;">
+                <input type="checkbox" id="b-published" style="width:auto;">
+                <label for="b-published" style="margin:0;">Published (visible on the live site)</label>
+              </div>
+              <button type="submit" class="btn btn-gold" id="blog-submit-btn">Add Post</button>
+              <button type="button" class="btn btn-outline" id="blog-cancel-edit-btn" style="display:none;">Cancel Edit</button>
+            </form>
+          </div>
+          <div id="admin-blog-list" class="admin-table-wrap"></div>
+        </section>
+
+        <!-- SETTINGS VIEW -->
+        <section id="view-settings" class="admin-view hidden">
+          <h2>Site Settings</h2>
+          <div class="admin-card">
+            <form id="settings-form">
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="s-whatsapp1">WhatsApp Number 1 (with country code, digits only)</label>
+                  <input type="text" id="s-whatsapp1" placeholder="919310812957">
+                </div>
+                <div class="form-group">
+                  <label for="s-whatsapp2">WhatsApp Number 2 (with country code, digits only)</label>
+                  <input type="text" id="s-whatsapp2" placeholder="918587820230">
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="s-instagram">Instagram URL</label>
+                  <input type="text" id="s-instagram" placeholder="https://www.instagram.com/primebuilders230">
+                </div>
+                <div class="form-group">
+                  <label for="s-facebook">Facebook URL</label>
+                  <input type="text" id="s-facebook" placeholder="https://www.facebook.com/...">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="s-address">Office Address</label>
+                <input type="text" id="s-address">
+              </div>
+              <div class="form-group">
+                <label for="s-hours">Office Hours</label>
+                <input type="text" id="s-hours">
+              </div>
+              <div class="form-group">
+                <label for="s-email">Contact Email</label>
+                <input type="email" id="s-email">
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="s-properties-count">Properties Sold (homepage stat)</label>
+                  <input type="number" id="s-properties-count">
+                </div>
+                <div class="form-group">
+                  <label for="s-families-count">Happy Families (homepage stat)</label>
+                  <input type="number" id="s-families-count">
+                </div>
+                <div class="form-group">
+                  <label for="s-years-count">Years Experience (homepage stat)</label>
+                  <input type="number" id="s-years-count">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="s-rera">RERA Registration Number</label>
+                <input type="text" id="s-rera" placeholder="e.g. DLRERA2024P0001">
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="s-google-url">Google Reviews Link</label>
+                  <input type="text" id="s-google-url" placeholder="https://g.page/r/.../review">
+                </div>
+                <div class="form-group">
+                  <label for="s-google-rating">Google Rating</label>
+                  <input type="text" id="s-google-rating" placeholder="e.g. 4.8">
+                </div>
+                <div class="form-group">
+                  <label for="s-google-count">Number of Google Reviews</label>
+                  <input type="number" id="s-google-count" placeholder="e.g. 64">
+                </div>
+              </div>
+              <button type="submit" class="btn btn-gold">Save Settings</button>
+            </form>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- PROPERTY EDIT/ADD MODAL -->
+  <div id="property-modal-slot"></div>
+
+  <script src="/js/admin.js"></script>
+</body>
+</html>

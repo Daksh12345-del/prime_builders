@@ -1,0 +1,20 @@
+{
+  "name": "prime-builder",
+  "version": "1.0.0",
+  "description": "Prime Builder - real estate website with backend (West Delhi 2BHK/3BHK/4BHK)",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "node server/index.js",
+    "seed": "node server/db/seed.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "multer": "^1.4.5-lts.1",
+    "multer-storage-cloudinary": "^4.0.0",
+    "cloudinary": "^1.41.3",
+    "cors": "^2.8.5",
+    "jsonwebtoken": "^9.0.2",
+    "dotenv": "^16.4.5"
+  }
+}

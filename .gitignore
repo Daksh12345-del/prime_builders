@@ -1,0 +1,10 @@
+node_modules/
+.env
+prime_builder_data.json
+server/uploads/properties/*
+server/uploads/gallery/*
+server/uploads/homepage-videos/*
+!server/uploads/properties/.gitkeep
+!server/uploads/gallery/.gitkeep
+!server/uploads/homepage-videos/.gitkeep
+.DS_Store
