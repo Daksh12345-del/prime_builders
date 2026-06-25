@@ -3,6 +3,14 @@
 // when the user arrives from a property's "Enquire" button.
 
 async function loadContactPageData() {
+  // Show fallback numbers immediately so they're always visible
+  const fallback1 = '919310812957';
+  const fallback2 = '918587820230';
+  document.getElementById('whatsapp-link-1').href = whatsappLink(fallback1);
+  document.getElementById('whatsapp-link-1').textContent = '+91 ' + formatPhone(fallback1);
+  document.getElementById('whatsapp-link-2').href = whatsappLink(fallback2);
+  document.getElementById('whatsapp-link-2').textContent = '+91 ' + formatPhone(fallback2);
+
   const settings = await getSettings();
 
   document.getElementById('whatsapp-link-1').href = whatsappLink(settings.whatsapp_1);
