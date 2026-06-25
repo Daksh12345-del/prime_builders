@@ -38,7 +38,7 @@ async function getSettings() {
       facebook_url: 'https://www.facebook.com/people/Prime-Builders/61590449296500/',
       office_address: 'West Delhi, New Delhi, India',
       office_hours: 'Mon - Sat: 10:00 AM - 7:00 PM',
-      contact_email: 'info@primebuilder.in',
+      contact_email: 'info@primebuilders.co.in',
       properties_sold_count: '200',
       families_count: '850',
       years_experience: '12',
