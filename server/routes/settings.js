@@ -10,7 +10,19 @@ const { requireAdmin } = require('../middleware/auth');
 // ---------- SETTINGS: PUBLIC ----------
 
 router.get('/settings', (req, res) => {
-  res.json(store.getSettings());
+  const saved = store.getSettings();
+  // Merge .env fallbacks so phone numbers, email etc. always have a value
+  const merged = {
+    whatsapp_1: process.env.WHATSAPP_NUMBER_1 || '919310812957',
+    whatsapp_2: process.env.WHATSAPP_NUMBER_2 || '918587820230',
+    contact_email: process.env.OWNER_EMAIL || 'info@primebuilders.co.in',
+    instagram_url: 'https://www.instagram.com/primebuilders230',
+    facebook_url: 'https://www.facebook.com/people/Prime-Builders/61590449296500/',
+    office_address: 'West Delhi, New Delhi, India',
+    office_hours: 'Mon - Sat: 10:00 AM - 7:00 PM',
+    ...saved   // admin-saved values override the above defaults
+  };
+  res.json(merged);
 });
 
 // ---------- SETTINGS: ADMIN ----------
