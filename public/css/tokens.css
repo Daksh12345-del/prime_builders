@@ -1,0 +1,70 @@
+/* public/css/tokens.css
+   Design tokens for Prime Builder.
+   Palette pulled from the actual logo (deep red house, grey swoosh) plus a
+   muted antique gold — not a generic bright-gold-on-black luxury template.
+*/
+
+:root {
+  /* Color */
+  --color-ink: #0A0A0A;          /* near-black base */
+  --color-surface: #161412;      /* card surface, slightly warm black */
+  --color-surface-raised: #201D19;
+  --color-gold: #C9A24B;         /* muted antique gold accent */
+  --color-gold-bright: #E0BC6B;  /* hover/active state of gold */
+  --color-red: #8B1E1E;          /* deep red, pulled from logo house */
+  --color-red-bright: #A8302F;
+  --color-grey: #8A8580;         /* warm grey, pulled from logo swoosh */
+  --color-paper: #F6F3EC;        /* off-white, used sparingly for contrast panels */
+  --color-white: #FFFFFF;
+  --color-line: rgba(201, 162, 75, 0.18); /* hairline dividers, gold at low opacity */
+  --color-success: #4C7A52;
+  --color-danger: #A8302F;
+
+  /* Typography */
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.375rem;
+  --text-2xl: 1.875rem;
+  --text-3xl: 2.5rem;
+  --text-4xl: 3.5rem;
+  --text-5xl: 4.5rem;
+
+  /* Spacing scale */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-8: 3rem;
+  --space-10: 4rem;
+  --space-12: 6rem;
+  --space-16: 8rem;
+
+  /* Layout */
+  --max-width: 1280px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+
+  /* Motion */
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --duration-fast: 150ms;
+  --duration-base: 300ms;
+  --duration-slow: 600ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
