@@ -32,7 +32,7 @@ async function getSettings() {
     _settingsCache = await apiGet('/settings');
   } catch (e) {
     _settingsCache = {
-      whatsapp_1: '919310812957',
+      whatsapp_1: '919302812957',
       whatsapp_2: '918587820230',
       instagram_url: 'https://www.instagram.com/primebuilders230',
       facebook_url: 'https://www.facebook.com/people/Prime-Builders/61590449296500/',
@@ -156,7 +156,7 @@ async function renderFooter() {
             <p>${settings.office_address || 'West Delhi, New Delhi'}</p>
             <p class="sub">${settings.office_hours || 'Mon - Sat: 10:00 AM - 7:00 PM'}</p>
             <a href="mailto:${settings.contact_email || 'info@primebuilder.in'}">${settings.contact_email || 'info@primebuilder.in'}</a>
-            <a href="tel:+${settings.whatsapp_1 || '919310812957'}">+91 ${formatPhone(settings.whatsapp_1)}</a>
+            <a href="tel:+${settings.whatsapp_1 || '919302812957'}">+91 ${formatPhone(settings.whatsapp_1)}</a>
             <a href="tel:+${settings.whatsapp_2 || '918587820230'}">+91 ${formatPhone(settings.whatsapp_2)}</a>
             ${settings.rera_number ? `<p class="sub" style="margin-top:10px;">RERA Reg. No: <span class="mono">${settings.rera_number}</span></p>` : ''}
           </div>
