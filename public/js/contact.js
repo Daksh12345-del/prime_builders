@@ -3,14 +3,6 @@
 // when the user arrives from a property's "Enquire" button.
 
 async function loadContactPageData() {
-  // Show fallback numbers immediately so they're always visible
-  const fallback1 = '919310812957';
-  const fallback2 = '918587820230';
-  document.getElementById('whatsapp-link-1').href = whatsappLink(fallback1);
-  document.getElementById('whatsapp-link-1').textContent = '+91 ' + formatPhone(fallback1);
-  document.getElementById('whatsapp-link-2').href = whatsappLink(fallback2);
-  document.getElementById('whatsapp-link-2').textContent = '+91 ' + formatPhone(fallback2);
-
   const settings = await getSettings();
 
   document.getElementById('whatsapp-link-1').href = whatsappLink(settings.whatsapp_1);
@@ -22,21 +14,9 @@ async function loadContactPageData() {
   document.getElementById('office-address').textContent = settings.office_address || 'West Delhi, New Delhi';
   document.getElementById('office-hours').textContent = settings.office_hours || 'Mon - Sat: 10:00 AM - 7:00 PM';
 
-  if (settings.rera_number) {
-    document.getElementById('rera-number-line').style.display = 'block';
-    document.getElementById('rera-number-value').textContent = settings.rera_number;
-  }
-
   const emailLink = document.getElementById('email-link');
   emailLink.href = `mailto:${settings.contact_email || 'info@primebuilder.in'}`;
   emailLink.textContent = settings.contact_email || 'info@primebuilder.in';
-
-  if (settings.google_review_url) {
-    document.getElementById('contact-google-review-card').style.display = 'block';
-    document.getElementById('contact-google-review-link').href = settings.google_review_url;
-    document.getElementById('contact-google-review-text').textContent =
-      `${settings.google_rating ? settings.google_rating + ' stars' : 'Rated'} on Google${settings.google_review_count ? ` (${settings.google_review_count} reviews)` : ''} — read what clients say`;
-  }
 
   const socialSlot = document.getElementById('contact-social-links');
   if (socialSlot) {
