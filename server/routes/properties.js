@@ -1,23 +1,30 @@
 // server/routes/properties.js
+// Public routes: anyone can view properties (for the live website).
+// Admin routes: only the logged-in admin can add, edit, or delete properties,
+// and upload/remove their photos.
+
 const express = require('express');
 const router = express.Router();
+const fs = require('fs');
+const path = require('path');
 const store = require('../db/store');
 const { requireAdmin } = require('../middleware/auth');
-const { uploadPropertyImages, cloudinary } = require('../middleware/upload');
+const { uploadPropertyImages } = require('../middleware/upload');
 
 function formatProperty(property) {
   const images = (property.images || []).map(img => ({
     id: img.id,
-    url: img.url,          // Cloudinary URL stored directly
-    public_id: img.public_id
+    url: `/uploads/properties/${img.filename}`
   }));
   return { ...property, images };
 }
 
 // ---------- PUBLIC ROUTES ----------
 
+// GET /api/properties?bhk=3BHK&locality=Janakpuri&sort=price_asc&status=Available&search=...
 router.get('/', (req, res) => {
   const { bhk, locality, sort, status, search } = req.query;
+
   let rows = store.getAll('properties');
 
   if (bhk) rows = rows.filter(p => p.bhk === bhk);
@@ -36,6 +43,7 @@ router.get('/', (req, res) => {
   res.json(rows.map(formatProperty));
 });
 
+// GET /api/properties/:id
 router.get('/:id', (req, res) => {
   const property = store.getById('properties', req.params.id);
   if (!property) return res.status(404).json({ error: 'Property not found.' });
@@ -44,6 +52,7 @@ router.get('/:id', (req, res) => {
 
 // ---------- ADMIN ROUTES ----------
 
+// POST /api/properties  (create new property)
 router.post('/', requireAdmin, (req, res) => {
   const {
     title, bhk, locality, price_value, price_label,
@@ -56,7 +65,9 @@ router.post('/', requireAdmin, (req, res) => {
   }
 
   const created = store.insert('properties', {
-    title, bhk, locality,
+    title,
+    bhk,
+    locality,
     price_value: Number(price_value),
     price_label,
     area_sqft: Number(area_sqft),
@@ -75,6 +86,7 @@ router.post('/', requireAdmin, (req, res) => {
   res.status(201).json(formatProperty(created));
 });
 
+// PUT /api/properties/:id  (edit existing property)
 router.put('/:id', requireAdmin, (req, res) => {
   const existing = store.getById('properties', req.params.id);
   if (!existing) return res.status(404).json({ error: 'Property not found.' });
@@ -106,56 +118,58 @@ router.put('/:id', requireAdmin, (req, res) => {
   res.json(formatProperty(updated));
 });
 
-router.delete('/:id', requireAdmin, async (req, res) => {
+// DELETE /api/properties/:id
+router.delete('/:id', requireAdmin, (req, res) => {
   const existing = store.getById('properties', req.params.id);
   if (!existing) return res.status(404).json({ error: 'Property not found.' });
 
-  // Delete images from Cloudinary
-  for (const img of (existing.images || [])) {
-    if (img.public_id) {
-      try { await cloudinary.uploader.destroy(img.public_id); } catch (e) { /* ignore */ }
-    }
-  }
+  // Clean up any uploaded photo files belonging to this property
+  (existing.images || []).forEach(img => {
+    const filePath = path.join(__dirname, '..', 'uploads', 'properties', img.filename);
+    if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+  });
 
   store.remove('properties', req.params.id);
   res.json({ success: true });
 });
 
-// POST /api/properties/:id/images
+// POST /api/properties/:id/images  (upload up to 10 photos for a property)
 router.post('/:id/images', requireAdmin, uploadPropertyImages.array('images', 10), (req, res) => {
   const property = store.getById('properties', req.params.id);
   if (!property) return res.status(404).json({ error: 'Property not found.' });
-  if (!req.files || req.files.length === 0) return res.status(400).json({ error: 'No image files were uploaded.' });
+
+  if (!req.files || req.files.length === 0) {
+    return res.status(400).json({ error: 'No image files were uploaded.' });
+  }
 
   let nextImgId = 1;
   (property.images || []).forEach(img => { if (img.id >= nextImgId) nextImgId = img.id + 1; });
 
   const newImages = req.files.map((file, i) => ({
     id: nextImgId + i,
-    url: file.path,           // Cloudinary returns full URL in file.path
-    public_id: file.filename  // Cloudinary public_id stored in file.filename
+    filename: file.filename
   }));
 
   const updatedImages = [...(property.images || []), ...newImages];
   const updated = store.update('properties', req.params.id, { images: updatedImages });
+
   res.status(201).json(formatProperty(updated));
 });
 
 // DELETE /api/properties/:id/images/:imageId
-router.delete('/:id/images/:imageId', requireAdmin, async (req, res) => {
+router.delete('/:id/images/:imageId', requireAdmin, (req, res) => {
   const property = store.getById('properties', req.params.id);
   if (!property) return res.status(404).json({ error: 'Property not found.' });
 
   const image = (property.images || []).find(img => String(img.id) === String(req.params.imageId));
   if (!image) return res.status(404).json({ error: 'Image not found.' });
 
-  // Delete from Cloudinary
-  if (image.public_id) {
-    try { await cloudinary.uploader.destroy(image.public_id); } catch (e) { /* ignore */ }
-  }
+  const filePath = path.join(__dirname, '..', 'uploads', 'properties', image.filename);
+  if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
 
   const updatedImages = property.images.filter(img => String(img.id) !== String(req.params.imageId));
   store.update('properties', req.params.id, { images: updatedImages });
+
   res.json({ success: true });
 });
 
