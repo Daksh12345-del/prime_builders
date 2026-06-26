@@ -53,7 +53,7 @@ async function getSettings() {
 
 function whatsappLink(number, message) {
   const text = encodeURIComponent(message || 'Hi, I am interested in a property listed by Prime Builder.');
-  return `https://api.whatsapp.com/send?phone=${number}&text=${text}`;
+  return `https://api.whatsapp.com/send/?phone=${number}&text=${text}&type=phone_number&app_absent=0`;
 }
 
 // ---------- Header / Footer injection ----------
