@@ -38,7 +38,7 @@ async function getSettings() {
       facebook_url: 'https://www.facebook.com/people/Prime-Builders/61590449296500/',
       office_address: 'West Delhi, New Delhi, India',
       office_hours: 'Mon - Sat: 10:00 AM - 7:00 PM',
-      contact_email: 'info@primebuilders.co.in',
+      contact_email: 'info@primebuilder.in',
       properties_sold_count: '200',
       families_count: '850',
       years_experience: '12',
@@ -53,7 +53,7 @@ async function getSettings() {
 
 function whatsappLink(number, message) {
   const text = encodeURIComponent(message || 'Hi, I am interested in a property listed by Prime Builder.');
-  return `https://wa.me/${number}?text=${text}`;
+  return `https://api.whatsapp.com/send?phone=${number}&text=${text}`;
 }
 
 // ---------- Header / Footer injection ----------
@@ -66,30 +66,15 @@ const NAV_ITEMS = [
   { href: '/contact.html', label: 'Contact' }
 ];
 
-const LOCALITIES = [
-  { href: '/janakpuri.html', label: 'Janakpuri' },
-  { href: '/rajouri-garden.html', label: 'Rajouri Garden' },
-  { href: '/tilak-nagar.html', label: 'Tilak Nagar' },
-  { href: '/vikaspuri.html', label: 'Vikaspuri' },
-  { href: '/paschim-vihar.html', label: 'Paschim Vihar' },
-  { href: '/uttam-nagar.html', label: 'Uttam Nagar' }
-];
-
 function renderHeader(activePath) {
   const slot = document.getElementById('site-header-slot');
   if (!slot) return;
-
-  const isLocalityActive = LOCALITIES.some(l => l.href === activePath);
 
   const links = NAV_ITEMS.map(item => {
     const isActive = item.href === activePath ||
       (activePath === '/index.html' && item.href === '/');
     return `<a href="${item.href}" class="${isActive ? 'active' : ''}">${item.label}</a>`;
   }).join('');
-
-  const localityLinks = LOCALITIES.map(l =>
-    `<a href="${l.href}" class="dropdown-item${l.href === activePath ? ' active' : ''}">${l.label}</a>`
-  ).join('');
 
   slot.innerHTML = `
     <header class="site-header">
@@ -104,19 +89,7 @@ function renderHeader(activePath) {
           <span></span>
         </button>
         <nav class="nav-links" id="nav-links">
-          <a href="/" class="${activePath === '/' || activePath === '/index.html' ? 'active' : ''}">Home</a>
-          <a href="/properties.html" class="${activePath === '/properties.html' ? 'active' : ''}">Properties</a>
-          <div class="nav-dropdown${isLocalityActive ? ' active' : ''}">
-            <button class="nav-dropdown-toggle" aria-haspopup="true" aria-expanded="false">
-              Localities <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 4l4 4 4-4"/></svg>
-            </button>
-            <div class="nav-dropdown-menu">
-              ${localityLinks}
-            </div>
-          </div>
-          <a href="/gallery.html" class="${activePath === '/gallery.html' ? 'active' : ''}">Gallery</a>
-          <a href="/blog.html" class="${activePath === '/blog.html' ? 'active' : ''}">Blog</a>
-          <a href="/contact.html" class="${activePath === '/contact.html' ? 'active' : ''}">Contact</a>
+          ${links}
           <a href="/contact.html" class="nav-cta">Enquire Now</a>
         </nav>
       </div>
@@ -131,22 +104,6 @@ function renderHeader(activePath) {
     toggle.setAttribute('aria-expanded', String(isOpen));
     document.body.style.overflow = isOpen ? 'hidden' : '';
   });
-
-  // Localities dropdown toggle
-  const dropdownToggle = slot.querySelector('.nav-dropdown-toggle');
-  const dropdown = slot.querySelector('.nav-dropdown');
-  if (dropdownToggle && dropdown) {
-    dropdownToggle.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const isOpen = dropdown.classList.toggle('open');
-      dropdownToggle.setAttribute('aria-expanded', String(isOpen));
-    });
-    // Close dropdown when clicking outside
-    document.addEventListener('click', () => {
-      dropdown.classList.remove('open');
-      dropdownToggle.setAttribute('aria-expanded', 'false');
-    });
-  }
 
   // Close menu when a nav link is clicked
   navLinks.querySelectorAll('a').forEach(link => {
@@ -195,15 +152,6 @@ async function renderFooter() {
             <a href="/contact.html">Contact</a>
           </div>
           <div>
-            <h4>Localities</h4>
-            <a href="/janakpuri.html">Janakpuri</a>
-            <a href="/rajouri-garden.html">Rajouri Garden</a>
-            <a href="/tilak-nagar.html">Tilak Nagar</a>
-            <a href="/vikaspuri.html">Vikaspuri</a>
-            <a href="/paschim-vihar.html">Paschim Vihar</a>
-            <a href="/uttam-nagar.html">Uttam Nagar</a>
-          </div>
-          <div>
             <h4>Contact</h4>
             <p>${settings.office_address || 'West Delhi, New Delhi'}</p>
             <p class="sub">${settings.office_hours || 'Mon - Sat: 10:00 AM - 7:00 PM'}</p>
@@ -228,15 +176,8 @@ async function renderFooter() {
 
 function formatPhone(fullNumber) {
   if (!fullNumber) return '';
-  // Strip leading +, spaces, dashes, then strip country code 91
-  let digits = String(fullNumber).replace(/[\s\-\+]/g, '');
-  if (digits.startsWith('91') && digits.length > 10) {
-    digits = digits.slice(2);
-  }
-  // Format as XXXXX XXXXX
-  const m = digits.match(/^(\d{5})(\d{5})$/);
-  if (m) return m[1] + ' ' + m[2];
-  return digits; // fallback: return as-is
+  const digits = fullNumber.replace(/^91/, '');
+  return digits.replace(/(\d{5})(\d{5})/, '$1 $2');
 }
 
 async function renderWhatsAppFloat() {
