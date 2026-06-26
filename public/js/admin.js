@@ -666,7 +666,7 @@ function renderInquiriesTable(inquiries, showDelete) {
             </td>
             <td>${new Date(i.created_at).toLocaleDateString('en-IN')}</td>
             <td>
-              <a class="icon-btn" href="https://api.whatsapp.com/send?phone=91${i.phone.replace(/\D/g,'').slice(-10)}" target="_blank" rel="noopener">WhatsApp</a>
+              <a class="icon-btn" href="https://api.whatsapp.com/send/?phone=91${i.phone.replace(/\D/g,'').slice(-10)}&type=phone_number&app_absent=0" target="_blank" rel="noopener">WhatsApp</a>
               ${showDelete ? `<button class="icon-btn danger" data-action="delete-inquiry" data-id="${i.id}">Delete</button>` : ''}
             </td>
           </tr>
