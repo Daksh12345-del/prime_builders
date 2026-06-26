@@ -16,7 +16,6 @@ const DEFAULT_DATA = {
   gallery_items: [],     // { id, type, filename, youtube_id, caption, sort_order, created_at }
   homepage_videos: [],   // { id, title, video_filename, cover_filename, sort_order, created_at }
   testimonials: [],      // { id, name, locality, quote, rating, sort_order }
-  blog_posts: [],        // { id, title, slug, excerpt, body, cover_url, published, created_at, published_at }
   inquiries: [],         // { id, name, phone, email, budget, message, property_id, status, created_at }
   site_settings: {},     // { key: value }
   _next_id: 1            // counter used to generate unique IDs across all tables
