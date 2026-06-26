@@ -1,13 +1,12 @@
 // server/db/seed.js
-// Populates the database with starter content so the site isn't empty on first run.
+// Populates the data file with starter content so the site isn't empty on first run.
 // Safe to re-run — it checks if data already exists before inserting.
 // Run manually with: npm run seed
 
-require('dotenv').config();
 const store = require('./store');
 
-async function seedProperties() {
-  const existing = await store.getAll('properties');
+function seedProperties() {
+  const existing = store.getAll('properties');
   if (existing.length > 0) {
     console.log(`Properties already has ${existing.length} rows — skipping seed.`);
     return;
@@ -123,14 +122,12 @@ async function seedProperties() {
     }
   ];
 
-  for (const p of sampleProperties) {
-    await store.insert('properties', p);
-  }
+  sampleProperties.forEach(p => store.insert('properties', p));
   console.log(`Inserted ${sampleProperties.length} sample properties.`);
 }
 
-async function seedTestimonials() {
-  const existing = await store.getAll('testimonials');
+function seedTestimonials() {
+  const existing = store.getAll('testimonials');
   if (existing.length > 0) {
     console.log(`Testimonials already has ${existing.length} rows — skipping seed.`);
     return;
@@ -160,16 +157,14 @@ async function seedTestimonials() {
     }
   ];
 
-  for (const t of rows) {
-    await store.insert('testimonials', t);
-  }
+  rows.forEach(t => store.insert('testimonials', t));
   console.log(`Inserted ${rows.length} testimonials.`);
 }
 
-async function seedSettings() {
-  const current = await store.getSettings();
+function seedSettings() {
+  const current = store.getSettings();
   const defaults = {
-    whatsapp_1: '919302812957',
+    whatsapp_1: '919310812957',
     whatsapp_2: '918587820230',
     instagram_url: 'https://www.instagram.com/primebuilders230',
     facebook_url: 'https://www.facebook.com/people/Prime-Builders/61590449296500/',
@@ -178,11 +173,7 @@ async function seedSettings() {
     contact_email: 'info@primebuilder.in',
     properties_sold_count: '200',
     families_count: '850',
-    years_experience: '12',
-    rera_number: '',
-    google_review_url: '',
-    google_rating: '',
-    google_review_count: ''
+    years_experience: '12'
   };
 
   const toApply = {};
@@ -191,93 +182,15 @@ async function seedSettings() {
   }
 
   if (Object.keys(toApply).length > 0) {
-    await store.setSettings(toApply);
+    store.setSettings(toApply);
     console.log('Site settings seeded.');
   } else {
     console.log('Site settings already present — skipping.');
   }
 }
 
-async function seedBlogPosts() {
-  const existing = await store.getAll('blog_posts');
-  if (existing.length > 0) {
-    console.log(`Blog already has ${existing.length} posts — skipping seed.`);
-    return;
-  }
+seedProperties();
+seedTestimonials();
+seedSettings();
 
-  const now = new Date().toISOString();
-  const posts = [
-    {
-      title: 'A First-Time Buyer\'s Guide to West Delhi Localities',
-      slug: 'first-time-buyer-guide-west-delhi-localities',
-      excerpt: 'Janakpuri, Rajouri Garden, Tilak Nagar, Vikaspuri, Paschim Vihar, Uttam Nagar — each West Delhi locality has a different character and price range. Here\'s how to think about which one fits your budget and lifestyle.',
-      body: `<p>West Delhi isn't one neighbourhood — it's six or seven distinct ones, each with its own pricing, connectivity, and character. If you're buying your first home here, the locality you choose matters almost as much as the flat itself.</p>
-<h3>If connectivity is your top priority</h3>
-<p>Uttam Nagar and Tilak Nagar both sit directly on the Blue Line, with Uttam Nagar having two stations of its own. These tend to be more budget-friendly entry points, especially for 2BHK homes.</p>
-<h3>If you want more space and greenery</h3>
-<p>Paschim Vihar and Rajouri Garden are known for wider roads, more established parks, and larger builder floors — usually at a higher price point, but with strong long-term resale value.</p>
-<h3>If you want a balance of both</h3>
-<p>Janakpuri and Vikaspuri sit in the middle: solid metro access, a mix of 2BHK to 4BHK options, and well-established residential infrastructure.</p>
-<p>Whatever your priority, the right move is to walk a few blocks before deciding — paper specifications rarely tell the full story of how a locality actually feels to live in. We're happy to set up visits across multiple localities so you can compare directly.</p>`,
-      cover_url: null,
-      published: true,
-      created_at: now,
-      published_at: now
-    },
-    {
-      title: 'Builder Floor vs Apartment: What Actually Matters in West Delhi',
-      slug: 'builder-floor-vs-apartment-west-delhi',
-      excerpt: 'Most of what\'s available across Janakpuri, Rajouri Garden, and nearby localities are independent builder floors rather than apartment-society units. Here\'s what that distinction means for you as a buyer.',
-      body: `<p>If you're coming from a city where "apartment society" is the default, West Delhi's builder-floor market can take some getting used to. Here's the short version of what's different.</p>
-<h3>Ownership and maintenance</h3>
-<p>A builder floor usually means you own one full floor of a small building (often G+3 or G+4), rather than a unit within a large society. Maintenance is typically shared informally among the floor owners rather than managed by a registered RWA — worth asking about explicitly before you buy.</p>
-<h3>Space and privacy</h3>
-<p>Builder floors generally offer more carpet area per rupee than apartment-society flats in the same locality, plus fewer shared walls and more control over renovations.</p>
-<h3>What to check before buying</h3>
-<p>Always verify the floor's registry documents, sanctioned building plan, and whether the terrace/parking rights are clearly assigned in writing — these are the most common sources of dispute later. We walk every client through this checklist before they sign anything.</p>`,
-      cover_url: null,
-      published: true,
-      created_at: now,
-      published_at: now
-    },
-    {
-      title: '5 Questions to Ask Before You Buy a Resale Home',
-      slug: '5-questions-before-buying-resale-home',
-      excerpt: 'Buying resale in West Delhi? These five questions will save you from the most common surprises after you\'ve already paid the token amount.',
-      body: `<p>Resale homes move fast in West Delhi, and it's easy to get caught up in the excitement of a good price. Before you commit, make sure you've got clear answers to these five questions.</p>
-<h3>1. Is the registry clean and in the seller's name?</h3>
-<p>Always verify the chain of ownership goes back cleanly, with no pending litigation or unclear inheritance.</p>
-<h3>2. Are there any outstanding dues?</h3>
-<p>Property tax, electricity, water, and any society/floor maintenance dues should be cleared before registry — confirm this in writing.</p>
-<h3>3. What's the actual carpet area versus the quoted area?</h3>
-<p>Quoted "super area" numbers can be generous. Always ask for the carpet area and verify with a tape measure if needed.</p>
-<h3>4. Is the building plan sanctioned and matching what's built?</h3>
-<p>Unauthorized construction (extra floors, extended terraces) can cause problems at registry or resale later.</p>
-<h3>5. Why is the seller actually selling?</h3>
-<p>Not a legal question, but a useful one — it often reveals whether there's room to negotiate and whether the timeline is flexible.</p>
-<p>If you'd like, we can walk through this checklist together for any specific property you're considering.</p>`,
-      cover_url: null,
-      published: true,
-      created_at: now,
-      published_at: now
-    }
-  ];
-
-  for (const p of posts) {
-    await store.insert('blog_posts', p);
-  }
-  console.log(`Inserted ${posts.length} blog posts.`);
-}
-
-async function runSeed() {
-  await seedProperties();
-  await seedTestimonials();
-  await seedBlogPosts();
-  await seedSettings();
-  console.log('Seeding complete.');
-}
-
-runSeed().catch(err => {
-  console.error('Seeding failed:', err);
-  process.exit(1);
-});
+console.log('Seeding complete.');
