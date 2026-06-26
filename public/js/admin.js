@@ -134,7 +134,6 @@ function switchView(viewName) {
   else if (viewName === 'homepage-videos') loadHomepageVideosView();
   else if (viewName === 'inquiries') loadInquiriesView();
   else if (viewName === 'testimonials') loadTestimonialsView();
-  else if (viewName === 'blog') loadBlogView();
   else if (viewName === 'settings') loadSettingsView();
 }
 
@@ -666,7 +665,7 @@ function renderInquiriesTable(inquiries, showDelete) {
             </td>
             <td>${new Date(i.created_at).toLocaleDateString('en-IN')}</td>
             <td>
-              <a class="icon-btn" href="https://api.whatsapp.com/send/?phone=91${i.phone.replace(/\D/g,'').slice(-10)}&type=phone_number&app_absent=0" target="_blank" rel="noopener">WhatsApp</a>
+              <a class="icon-btn" href="https://wa.me/91${i.phone.replace(/\D/g,'').slice(-10)}" target="_blank" rel="noopener">WhatsApp</a>
               ${showDelete ? `<button class="icon-btn danger" data-action="delete-inquiry" data-id="${i.id}">Delete</button>` : ''}
             </td>
           </tr>
@@ -760,108 +759,7 @@ async function handleTestimonialAdd(e) {
   }
 }
 
-// ---------- Blog view ----------
-
-let editingBlogId = null;
-
-async function loadBlogView() {
-  const wrap = document.getElementById('admin-blog-list');
-  wrap.innerHTML = `<div class="admin-table-empty">Loading...</div>`;
-  try {
-    const posts = await apiGet('/blog/admin/all');
-    wrap.innerHTML = posts.length > 0 ? `
-      <table class="admin-table">
-        <thead><tr><th>Title</th><th>Status</th><th>Published</th><th></th></tr></thead>
-        <tbody>
-          ${posts.map(p => `
-            <tr>
-              <td>${escapeHTML(p.title)}</td>
-              <td>${p.published ? '<span style="color:var(--color-success);">Published</span>' : '<span style="color:var(--color-grey);">Draft</span>'}</td>
-              <td>${p.published_at ? new Date(p.published_at).toLocaleDateString('en-IN') : '&mdash;'}</td>
-              <td style="white-space:nowrap;">
-                <button class="icon-btn" data-action="edit-blog" data-id="${p.id}">Edit</button>
-                <button class="icon-btn danger" data-action="delete-blog" data-id="${p.id}">Delete</button>
-              </td>
-            </tr>
-          `).join('')}
-        </tbody>
-      </table>
-    ` : `<div class="admin-table-empty">No blog posts yet.</div>`;
-
-    wrap.querySelectorAll('[data-action="delete-blog"]').forEach(btn => {
-      btn.addEventListener('click', async () => {
-        if (!confirm('Delete this blog post? This cannot be undone.')) return;
-        try {
-          await apiSend('DELETE', `/blog/${btn.dataset.id}`);
-          showToast('Post deleted.');
-          loadBlogView();
-        } catch (e) {
-          showToast(e.message, true);
-        }
-      });
-    });
-
-    wrap.querySelectorAll('[data-action="edit-blog"]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const post = posts.find(p => String(p.id) === btn.dataset.id);
-        if (post) startEditBlogPost(post);
-      });
-    });
-  } catch (e) {
-    wrap.innerHTML = `<div class="admin-table-empty">Could not load blog posts.</div>`;
-  }
-}
-
-function startEditBlogPost(post) {
-  editingBlogId = post.id;
-  document.getElementById('b-id').value = post.id;
-  document.getElementById('b-title').value = post.title;
-  document.getElementById('b-excerpt').value = post.excerpt || '';
-  document.getElementById('b-cover-url').value = post.cover_url || '';
-  document.getElementById('b-body').value = post.body;
-  document.getElementById('b-published').checked = !!post.published;
-
-  document.getElementById('blog-form-heading').textContent = 'Edit Post';
-  document.getElementById('blog-submit-btn').textContent = 'Save Changes';
-  document.getElementById('blog-cancel-edit-btn').style.display = 'inline-block';
-  document.getElementById('blog-form').scrollIntoView({ behavior: 'smooth' });
-}
-
-function resetBlogForm() {
-  editingBlogId = null;
-  document.getElementById('blog-form').reset();
-  document.getElementById('b-id').value = '';
-  document.getElementById('blog-form-heading').textContent = 'Add Post';
-  document.getElementById('blog-submit-btn').textContent = 'Add Post';
-  document.getElementById('blog-cancel-edit-btn').style.display = 'none';
-}
-
-async function handleBlogSave(e) {
-  e.preventDefault();
-  const payload = {
-    title: document.getElementById('b-title').value.trim(),
-    excerpt: document.getElementById('b-excerpt').value.trim(),
-    cover_url: document.getElementById('b-cover-url').value.trim() || null,
-    body: document.getElementById('b-body').value.trim(),
-    published: document.getElementById('b-published').checked
-  };
-
-  try {
-    if (editingBlogId) {
-      await apiSend('PUT', `/blog/${editingBlogId}`, payload);
-      showToast('Post updated.');
-    } else {
-      await apiSend('POST', '/blog', payload);
-      showToast('Post added.');
-    }
-    resetBlogForm();
-    loadBlogView();
-  } catch (err) {
-    showToast(err.message, true);
-  }
-}
-
-
+// ---------- Settings view ----------
 
 async function loadSettingsView() {
   try {
@@ -876,10 +774,6 @@ async function loadSettingsView() {
     document.getElementById('s-properties-count').value = settings.properties_sold_count || '';
     document.getElementById('s-families-count').value = settings.families_count || '';
     document.getElementById('s-years-count').value = settings.years_experience || '';
-    document.getElementById('s-rera').value = settings.rera_number || '';
-    document.getElementById('s-google-url').value = settings.google_review_url || '';
-    document.getElementById('s-google-rating').value = settings.google_rating || '';
-    document.getElementById('s-google-count').value = settings.google_review_count || '';
   } catch (e) {
     showToast('Could not load settings.', true);
   }
@@ -897,11 +791,7 @@ async function handleSettingsSave(e) {
     contact_email: document.getElementById('s-email').value.trim(),
     properties_sold_count: document.getElementById('s-properties-count').value,
     families_count: document.getElementById('s-families-count').value,
-    years_experience: document.getElementById('s-years-count').value,
-    rera_number: document.getElementById('s-rera').value.trim(),
-    google_review_url: document.getElementById('s-google-url').value.trim(),
-    google_rating: document.getElementById('s-google-rating').value.trim(),
-    google_review_count: document.getElementById('s-google-count').value
+    years_experience: document.getElementById('s-years-count').value
   };
   try {
     await apiSend('PUT', '/settings', payload);
@@ -926,8 +816,6 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('youtube-add-form').addEventListener('submit', handleYoutubeAdd);
   document.getElementById('homepage-video-form').addEventListener('submit', handleHomepageVideoUpload);
   document.getElementById('testimonial-form').addEventListener('submit', handleTestimonialAdd);
-  document.getElementById('blog-form').addEventListener('submit', handleBlogSave);
-  document.getElementById('blog-cancel-edit-btn').addEventListener('click', resetBlogForm);
   document.getElementById('settings-form').addEventListener('submit', handleSettingsSave);
 
   // Check if already logged in (token in localStorage)
