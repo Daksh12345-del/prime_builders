@@ -1,12 +1,13 @@
 // server/db/seed.js
-// Populates the data file with starter content so the site isn't empty on first run.
+// Populates the database with starter content so the site isn't empty on first run.
 // Safe to re-run — it checks if data already exists before inserting.
 // Run manually with: npm run seed
 
+require('dotenv').config();
 const store = require('./store');
 
-function seedProperties() {
-  const existing = store.getAll('properties');
+async function seedProperties() {
+  const existing = await store.getAll('properties');
   if (existing.length > 0) {
     console.log(`Properties already has ${existing.length} rows — skipping seed.`);
     return;
@@ -122,12 +123,14 @@ function seedProperties() {
     }
   ];
 
-  sampleProperties.forEach(p => store.insert('properties', p));
+  for (const p of sampleProperties) {
+    await store.insert('properties', p);
+  }
   console.log(`Inserted ${sampleProperties.length} sample properties.`);
 }
 
-function seedTestimonials() {
-  const existing = store.getAll('testimonials');
+async function seedTestimonials() {
+  const existing = await store.getAll('testimonials');
   if (existing.length > 0) {
     console.log(`Testimonials already has ${existing.length} rows — skipping seed.`);
     return;
@@ -157,14 +160,16 @@ function seedTestimonials() {
     }
   ];
 
-  rows.forEach(t => store.insert('testimonials', t));
+  for (const t of rows) {
+    await store.insert('testimonials', t);
+  }
   console.log(`Inserted ${rows.length} testimonials.`);
 }
 
-function seedSettings() {
-  const current = store.getSettings();
+async function seedSettings() {
+  const current = await store.getSettings();
   const defaults = {
-    whatsapp_1: '919310812957',
+    whatsapp_1: '919302812957',
     whatsapp_2: '918587820230',
     instagram_url: 'https://www.instagram.com/primebuilders230',
     facebook_url: 'https://www.facebook.com/people/Prime-Builders/61590449296500/',
@@ -186,15 +191,15 @@ function seedSettings() {
   }
 
   if (Object.keys(toApply).length > 0) {
-    store.setSettings(toApply);
+    await store.setSettings(toApply);
     console.log('Site settings seeded.');
   } else {
     console.log('Site settings already present — skipping.');
   }
 }
 
-function seedBlogPosts() {
-  const existing = store.getAll('blog_posts');
+async function seedBlogPosts() {
+  const existing = await store.getAll('blog_posts');
   if (existing.length > 0) {
     console.log(`Blog already has ${existing.length} posts — skipping seed.`);
     return;
@@ -258,13 +263,21 @@ function seedBlogPosts() {
     }
   ];
 
-  posts.forEach(p => store.insert('blog_posts', p));
+  for (const p of posts) {
+    await store.insert('blog_posts', p);
+  }
   console.log(`Inserted ${posts.length} blog posts.`);
 }
 
-seedProperties();
-seedTestimonials();
-seedBlogPosts();
-seedSettings();
+async function runSeed() {
+  await seedProperties();
+  await seedTestimonials();
+  await seedBlogPosts();
+  await seedSettings();
+  console.log('Seeding complete.');
+}
 
-console.log('Seeding complete.');
+runSeed().catch(err => {
+  console.error('Seeding failed:', err);
+  process.exit(1);
+});
