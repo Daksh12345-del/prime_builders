@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact — Prime Builder</title>
+  <meta name="description" content="Get in touch with Prime Builder for 2BHK, 3BHK and 4BHK homes in South West Delhi. Call, WhatsApp, or send your requirement.">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/images/favicon-192.png">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/tokens.css">
+  <link rel="stylesheet" href="/css/main.css">
+  <style>
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-10);
+    }
+    @media (max-width: 860px) {
+      .contact-grid { grid-template-columns: 1fr; }
+    }
+    .contact-info-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-line);
+      border-radius: var(--radius-md);
+      padding: var(--space-6);
+      margin-bottom: var(--space-4);
+    }
+    .contact-info-card h4 {
+      font-size: var(--text-sm);
+      color: var(--color-gold);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: var(--space-3);
+    }
+    .contact-info-card a, .contact-info-card p {
+      color: var(--color-paper);
+      font-size: var(--text-base);
+      margin-bottom: var(--space-1);
+    }
+    .contact-info-card .sub { color: var(--color-grey); font-size: var(--text-sm); }
+  </style>
+</head>
+<body>
+
+  <div id="site-header-slot"></div>
+
+  <main>
+    <section class="section">
+      <div class="container">
+        <span class="eyebrow">Get In Touch</span>
+        <h1 style="font-size:var(--text-3xl);color:var(--color-white);margin:8px 0 32px;">Tell us what you're looking for</h1>
+
+        <div class="contact-grid">
+          <div>
+            <form id="contact-form">
+              <div id="property-context" class="hidden" style="background:var(--color-surface);border:1px solid var(--color-gold);border-radius:var(--radius-sm);padding:var(--space-4);margin-bottom:var(--space-5);font-size:var(--text-sm);color:var(--color-paper);"></div>
+
+              <div class="form-group">
+                <label for="name">Full Name *</label>
+                <input type="text" id="name" name="name" required placeholder="Your name">
+              </div>
+
+              <div class="form-group">
+                <label for="phone">Phone Number *</label>
+                <input type="tel" id="phone" name="phone" required placeholder="10-digit mobile number">
+              </div>
+
+              <div class="form-group">
+                <label for="email">Email (optional)</label>
+                <input type="email" id="email" name="email" placeholder="you@example.com">
+              </div>
+
+              <div class="form-group">
+                <label for="budget">Budget Range (optional)</label>
+                <select id="budget" name="budget">
+                  <option value="">Select budget range</option>
+                  <option value="Under 60 Lakh">Under 60 Lakh</option>
+                  <option value="60 Lakh - 1 Cr">60 Lakh - 1 Cr</option>
+                  <option value="1 Cr - 1.5 Cr">1 Cr - 1.5 Cr</option>
+                  <option value="1.5 Cr - 2 Cr">1.5 Cr - 2 Cr</option>
+                  <option value="Above 2 Cr">Above 2 Cr</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="message">Message</label>
+                <textarea id="message" name="message" placeholder="Tell us about the BHK, locality, or property you're interested in..."></textarea>
+              </div>
+
+              <button type="submit" class="btn btn-gold btn-block" id="submit-btn">Send Enquiry</button>
+            </form>
+          </div>
+
+          <div>
+            <div class="contact-info-card">
+              <h4>WhatsApp</h4>
+              <a id="whatsapp-link-1" href="#" target="_blank" rel="noopener">+91 -- ----- -----</a>
+              <a id="whatsapp-link-2" href="#" target="_blank" rel="noopener">+91 -- ----- -----</a>
+              <p class="sub">Fastest way to reach us — usually same-day reply.</p>
+            </div>
+            <div class="contact-info-card">
+              <h4>Office</h4>
+              <p id="office-address">South West Delhi, New Delhi</p>
+              <p class="sub" id="office-hours">Mon - Sat: 10:00 AM - 7:00 PM</p>
+              <p class="sub" id="rera-number-line" style="display:none;margin-top:8px;">RERA Reg. No: <span class="mono" id="rera-number-value"></span></p>
+            </div>
+            <div class="contact-info-card">
+              <h4>Email</h4>
+              <a id="email-link" href="#">info@primebuilder.in</a>
+            </div>
+            <div class="contact-info-card" id="contact-google-review-card" style="display:none;">
+              <h4>Google Reviews</h4>
+              <a id="contact-google-review-link" href="#" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" style="color:var(--color-gold);flex-shrink:0;"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                <span id="contact-google-review-text"></span>
+              </a>
+            </div>
+            <div class="contact-info-card">
+              <h4>Service Area</h4>
+              <p class="sub">Uttam Nagar West · Om Vihar · Nawada · Dwarka Mor — and nearby localities across South West Delhi.</p>
+            </div>
+            <div class="contact-info-card">
+              <h4>Follow Us</h4>
+              <div id="contact-social-links" class="footer-social" style="margin-top:6px;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="site-footer-slot"></div>
+  <div id="whatsapp-float-slot"></div>
+
+  <script src="/js/common.js"></script>
+  <script src="/js/contact.js"></script>
+</body>
+</html>

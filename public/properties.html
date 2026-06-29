@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Properties — Prime Builder | South West Delhi 2BHK, 3BHK, 4BHK</title>
+  <meta name="description" content="Browse verified 2BHK, 3BHK and 4BHK homes for sale across South West Delhi. Filter by configuration, locality, and price.">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/images/favicon-192.png">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/tokens.css">
+  <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+
+  <div id="site-header-slot"></div>
+
+  <main>
+    <section class="section" style="padding-bottom:0;">
+      <div class="container">
+        <span class="eyebrow">All Listings</span>
+        <h1 style="font-size:var(--text-3xl);color:var(--color-white);margin:8px 0 32px;">Properties in South West Delhi</h1>
+
+        <div class="filter-bar">
+          <input type="text" id="search-input" placeholder="Search by locality or title, e.g. Janakpuri">
+          <select id="bhk-filter">
+            <option value="">All Configurations</option>
+            <option value="2BHK">2BHK</option>
+            <option value="3BHK">3BHK</option>
+            <option value="4BHK">4BHK</option>
+          </select>
+          <select id="units-filter">
+            <option value="">All Availability</option>
+            <option value="any">Has Units Available</option>
+            <option value="1">1 Unit</option>
+            <option value="2">2 Units</option>
+            <option value="3">3 Units</option>
+            <option value="4">4 Units</option>
+            <option value="5+">5+ Units</option>
+          </select>
+          <select id="status-filter">
+            <option value="Available">Available Only</option>
+            <option value="">All Statuses</option>
+            <option value="Sold">Sold Only</option>
+          </select>
+          <select id="sort-filter">
+            <option value="">Featured First</option>
+            <option value="price_asc">Price: Low to High</option>
+            <option value="price_desc">Price: High to Low</option>
+            <option value="newest">Newest First</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" style="padding-top:0;">
+      <div class="container">
+        <p id="results-count" style="color:var(--color-grey);margin-bottom:20px;font-size:var(--text-sm);"></p>
+        <div class="property-grid" id="property-list">
+          <div class="skeleton" style="height:380px;"></div>
+          <div class="skeleton" style="height:380px;"></div>
+          <div class="skeleton" style="height:380px;"></div>
+          <div class="skeleton" style="height:380px;"></div>
+          <div class="skeleton" style="height:380px;"></div>
+          <div class="skeleton" style="height:380px;"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Browse by Locality -->
+    <section class="section" style="border-top:1px solid var(--color-line);">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <span class="eyebrow">Explore by Area</span>
+            <h2>Browse by locality</h2>
+          </div>
+        </div>
+        <div class="locality-link-grid">
+          <a href="/uttam-nagar-west.html" class="locality-link-card">Uttam Nagar West</a>
+          <a href="/om-vihar.html" class="locality-link-card">Om Vihar</a>
+          <a href="/tilak-nagar.html" class="locality-link-card">Tilak Nagar</a>
+          <a href="/nawada.html" class="locality-link-card">Nawada</a>
+          
+          <a href="/dwarka-mor.html" class="locality-link-card">Dwarka Mor</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="property-modal-slot"></div>
+  <div id="site-footer-slot"></div>
+  <div id="whatsapp-float-slot"></div>
+
+  <script src="/js/common.js"></script>
+  <script src="/js/properties.js"></script>
+</body>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gallery — Prime Builder</title>
+  <meta name="description" content="Photos and videos of Prime Builder properties and client experiences across South West Delhi.">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/images/favicon-192.png">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/tokens.css">
+  <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+
+  <div id="site-header-slot"></div>
+
+  <main>
+    <section class="section" style="padding-bottom:0;">
+      <div class="container">
+        <span class="eyebrow">Visual Showcase</span>
+        <h1 style="font-size:var(--text-3xl);color:var(--color-white);margin:8px 0 12px;">Gallery</h1>
+        <p style="color:var(--color-grey);max-width:560px;margin-bottom:32px;">Photos and short videos from our properties and site visits across South West Delhi.</p>
+      </div>
+    </section>
+
+    <section class="section" style="padding-top:0;">
+      <div class="container">
+        <div class="gallery-grid" id="gallery-grid">
+          <div class="skeleton" style="aspect-ratio:1;"></div>
+          <div class="skeleton" style="aspect-ratio:1;"></div>
+          <div class="skeleton" style="aspect-ratio:1;"></div>
+          <div class="skeleton" style="aspect-ratio:1;"></div>
+          <div class="skeleton" style="aspect-ratio:1;"></div>
+          <div class="skeleton" style="aspect-ratio:1;"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="section" style="border-top:1px solid var(--color-line);">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <span class="eyebrow">In Their Words</span>
+            <h2>What clients say</h2>
+          </div>
+          <div id="google-review-cta"></div>
+        </div>
+        <div class="testimonial-grid" id="testimonial-grid">
+          <div class="skeleton" style="height:160px;"></div>
+          <div class="skeleton" style="height:160px;"></div>
+          <div class="skeleton" style="height:160px;"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="gallery-modal-slot"></div>
+  <div id="site-footer-slot"></div>
+  <div id="whatsapp-float-slot"></div>
+
+  <script src="/js/common.js"></script>
+  <script src="/js/gallery.js"></script>
+</body>
+</html>
